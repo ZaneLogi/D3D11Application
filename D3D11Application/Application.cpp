@@ -155,7 +155,7 @@ LRESULT Application::on_message(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
         WORD width = LOWORD(lParam);
         WORD height = HIWORD(lParam);
         LOG << "width = " << width << ", height = " << height << "\n";
-        if (m_graphics)
+        if (width != 0 && height != 0 && m_graphics)
         {
             m_graphics->resize_window(width, height);
         }
@@ -193,7 +193,7 @@ bool Application::init_window(HINSTANCE hInstance, int nCmdShow, int screen_widt
     RECT rc = { 0, 0, screen_width, screen_height };
     AdjustWindowRect(&rc, WS_OVERLAPPEDWINDOW, FALSE);
     m_hwnd = CreateWindow(window_class_name, window_title,
-        WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX | WS_THICKFRAME,
+        WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
         nullptr);
     if (!m_hwnd)
