@@ -4,8 +4,19 @@
 #include <directxmath.h>
 using namespace DirectX;
 
-class D3DCore
+__declspec(align(16)) class D3DCore
 {
+public:
+    void* operator new(size_t i)
+    {
+        return _mm_malloc(i, 16);
+    }
+
+    void operator delete(void* p)
+    {
+        _mm_free(p);
+    }
+
 public:
     D3DCore() = default;
     D3DCore(const D3DCore&) = delete;

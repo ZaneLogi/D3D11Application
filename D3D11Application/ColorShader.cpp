@@ -17,9 +17,9 @@ void ColorShader::shutdown()
 bool ColorShader::render(
     ID3D11DeviceContext* deviceContext,
     int indexCount,
-    XMMATRIX worldMatrix,
-    XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix)
+    const XMMATRIX& worldMatrix,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix)
 {
     // Set the shader parameters that it will use for rendering.
     if (!set_shader_parameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix))
@@ -218,8 +218,10 @@ void ColorShader::output_shader_error_message(ID3D10Blob* errorMessage, HWND hwn
     MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
 }
 
-bool ColorShader::set_shader_parameters(ID3D11DeviceContext* deviceContext, XMMATRIX worldMatrix, XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix)
+bool ColorShader::set_shader_parameters(ID3D11DeviceContext* deviceContext,
+    const XMMATRIX& worldMatrix,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
@@ -227,9 +229,9 @@ bool ColorShader::set_shader_parameters(ID3D11DeviceContext* deviceContext, XMMA
     unsigned int bufferNumber;
 
     // Transpose the matrices to prepare them for the shader.
-    worldMatrix = XMMatrixTranspose(worldMatrix);
-    viewMatrix = XMMatrixTranspose(viewMatrix);
-    projectionMatrix = XMMatrixTranspose(projectionMatrix);
+    auto worldMatrix1 = XMMatrixTranspose(worldMatrix);
+    auto viewMatrix1 = XMMatrixTranspose(viewMatrix);
+    auto projectionMatrix1 = XMMatrixTranspose(projectionMatrix);
 
     // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -242,9 +244,9 @@ bool ColorShader::set_shader_parameters(ID3D11DeviceContext* deviceContext, XMMA
     dataPtr = (MatrixBufferType*)mappedResource.pData;
 
     // Copy the matrices into the constant buffer.
-    dataPtr->world = worldMatrix;
-    dataPtr->view = viewMatrix;
-    dataPtr->projection = projectionMatrix;
+    dataPtr->world = worldMatrix1;
+    dataPtr->view = viewMatrix1;
+    dataPtr->projection = projectionMatrix1;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_matrixBuffer, 0);

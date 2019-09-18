@@ -17,9 +17,9 @@ void TextureShader::shutdown()
 bool TextureShader::render(
     ID3D11DeviceContext* deviceContext,
     int indexCount,
-    XMMATRIX worldMatrix,
-    XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix,
+    const XMMATRIX& worldMatrix,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix,
     ID3D11ShaderResourceView* texture)
 {
     // Set the shader parameters that it will use for rendering.
@@ -251,9 +251,9 @@ void TextureShader::output_shader_error_message(ID3D10Blob* errorMessage, HWND h
 
 bool TextureShader::set_shader_parameters(
     ID3D11DeviceContext* deviceContext,
-    XMMATRIX worldMatrix,
-    XMMATRIX viewMatrix,
-    XMMATRIX projectionMatrix,
+    const XMMATRIX& worldMatrix,
+    const XMMATRIX& viewMatrix,
+    const XMMATRIX& projectionMatrix,
     ID3D11ShaderResourceView* texture)
 {
     HRESULT result;
@@ -263,9 +263,9 @@ bool TextureShader::set_shader_parameters(
 
 
     // Transpose the matrices to prepare them for the shader.
-    worldMatrix = XMMatrixTranspose(worldMatrix);
-    viewMatrix = XMMatrixTranspose(viewMatrix);
-    projectionMatrix = XMMatrixTranspose(projectionMatrix);
+    auto worldMatrix1 = XMMatrixTranspose(worldMatrix);
+    auto viewMatrix1 = XMMatrixTranspose(viewMatrix);
+    auto projectionMatrix1 = XMMatrixTranspose(projectionMatrix);
 
     // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -278,9 +278,9 @@ bool TextureShader::set_shader_parameters(
     dataPtr = (MatrixBufferType*)mappedResource.pData;
 
     // Copy the matrices into the constant buffer.
-    dataPtr->world = worldMatrix;
-    dataPtr->view = viewMatrix;
-    dataPtr->projection = projectionMatrix;
+    dataPtr->world = worldMatrix1;
+    dataPtr->view = viewMatrix1;
+    dataPtr->projection = projectionMatrix1;
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_matrixBuffer, 0);
