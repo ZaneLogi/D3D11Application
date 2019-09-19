@@ -75,11 +75,74 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
         return false;
     }
 
+    //
+    m_light_model = new LightModel;
+    if (!m_light_model)
+    {
+        return false;
+    }
+
+    //
+    if (!m_light_model->initialize(m_d3dcore->get_device(), m_d3dcore->get_device_context(), "stone01.tga"))
+    {
+        MessageBox(hwnd, L"Could not initialize the light model object.", L"Error", MB_OK);
+        return false;
+    }
+
+    // Create the light shader object.
+    m_light_shader = new LightShader;
+    if (!m_light_shader)
+    {
+        return false;
+    }
+
+    // Initialize the light shader object.
+    if (!m_light_shader->initialize(m_d3dcore->get_device(), hwnd))
+    {
+        MessageBox(hwnd, L"Could not initialize the light shader object.", L"Error", MB_OK);
+        return false;
+    }
+
+    // Create the light object.
+    m_light = new Light;
+    if (!m_light)
+    {
+        return false;
+    }
+
+    // Initialize the light object.
+    m_light->set_diffuse_color(1.0f, 0.0f, 1.0f, 1.0f);
+    m_light->set_direction(0.0f, 0.0f, 1.0f);
+
     return true;
 }
 
 void Graphics::shutdown()
 {
+    // Release the light object.
+    if (m_light)
+    {
+        delete m_light;
+        m_light = 0;
+    }
+
+    // Release the light shader object.
+    if (m_light_shader)
+    {
+        m_light_shader->shutdown();
+        delete m_light_shader;
+        m_light_shader = nullptr;
+    }
+
+    // Release the light model object.
+    if (m_light_model)
+    {
+        m_light_model->shutdown();
+        delete m_light_model;
+        m_light_model = nullptr;
+    }
+
+    // Release the texture shader object.
     if (m_texture_shader)
     {
         m_texture_shader->shutdown();
@@ -87,6 +150,7 @@ void Graphics::shutdown()
         m_texture_shader = nullptr;
     }
 
+    // Release the texture model object.
     if (m_texture_model)
     {
         m_texture_model->shutdown();
@@ -147,6 +211,7 @@ bool Graphics::update()
 
     m_model->update();
     m_texture_model->update();
+    m_light_model->update();
     return true;
 }
 
@@ -164,6 +229,7 @@ bool Graphics::render()
     m_camera->get_view_matrix(viewMatrix);
     m_d3dcore->get_projection_matrix(projectionMatrix);
 
+#if 1
     m_model->get_world_matrix(worldMatrix);
     // Put the model vertex and index buffers on the graphics pipeline to prepare them for drawing.
     m_model->render(m_d3dcore->get_device_context());
@@ -172,7 +238,9 @@ bool Graphics::render()
     {
         return false;
     }
+#endif
 
+#if 1
     m_texture_model->get_world_matrix(worldMatrix);
     m_texture_model->render(m_d3dcore->get_device_context());
     if (!m_texture_shader->render(m_d3dcore->get_device_context(),
@@ -182,7 +250,21 @@ bool Graphics::render()
     {
         return false;
     }
+#endif
 
+#if 1
+    m_light_model->get_world_matrix(worldMatrix);
+    m_light_model->render(m_d3dcore->get_device_context());
+    if (!m_light_shader->render(m_d3dcore->get_device_context(),
+        m_light_model->get_index_count(),
+        worldMatrix, viewMatrix, projectionMatrix,
+        m_light_model->get_texture(),
+        m_light->get_direction(),
+        m_light->get_diffuse_color()))
+    {
+        return false;
+    }
+#endif
 
     // Present the rendered scene to the screen.
     m_d3dcore->end_scene();
