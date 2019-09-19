@@ -6,7 +6,7 @@ using namespace DirectX;
 
 #include "Texture.h"
 
-__declspec(align(16)) class TextureModel
+__declspec(align(16)) class BitmapModel
 {
 public:
     void* operator new(size_t i)
@@ -27,13 +27,13 @@ private:
     };
 
 public:
-    TextureModel() = default;
-    TextureModel(const TextureModel&) = delete;
+    BitmapModel() = default;
+    BitmapModel(const BitmapModel&) = delete;
 
-    bool initialize(ID3D11Device*, ID3D11DeviceContext*, char*);
+    bool initialize(ID3D11Device*, ID3D11DeviceContext*, char*, int, int, int, int);
     void shutdown();
-    void update();
-    void render(ID3D11DeviceContext*);
+    void set_screen_size(int width, int height);
+    bool render(ID3D11DeviceContext*, int, int);
 
     int get_index_count();
     void get_world_matrix(XMMATRIX& mat);
@@ -42,6 +42,7 @@ public:
 private:
     bool initialize_buffers(ID3D11Device*);
     void shutdown_buffers();
+    bool update_buffers(ID3D11DeviceContext*, int, int);
     void render_buffers(ID3D11DeviceContext*);
 
     bool load_texture(ID3D11Device*, ID3D11DeviceContext*, char*);
@@ -55,4 +56,8 @@ private:
     XMMATRIX        m_worldMatrix;
 
     Texture*        m_texture = nullptr;
+
+    int             m_screenWidth, m_screenHeight;
+    int             m_bitmapWidth, m_bitmapHeight;
+    int             m_previousPosX, m_previousPosY;
 };

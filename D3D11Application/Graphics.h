@@ -12,6 +12,7 @@
 #include "LightModel.h"
 #include "LightShader.h"
 #include "Light.h"
+#include "BitmapModel.h"
 
 class Graphics
 {
@@ -35,6 +36,8 @@ private:
     LightModel*     m_light_model = nullptr;
     LightShader*    m_light_shader = nullptr;
     Light*          m_light = nullptr;
+    BitmapModel*    m_bitmap_model = nullptr;
 
-    float           m_camera_speed = -0.01f;
+    float           m_camera_speed = -0.1f;
+    float           m_camera_rotation = 0.5f;
 };

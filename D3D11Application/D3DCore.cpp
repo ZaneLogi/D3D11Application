@@ -189,6 +189,42 @@ bool D3DCore::initialize(HWND hwnd, int screen_width, int screen_height)
     // Create the projection matrix for 3D rendering.
     m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
 
+    // Create an orthographic projection matrix for 2D rendering.
+    m_orthoMatrix = XMMatrixOrthographicLH((float)screen_width, (float)screen_height, screenNear, screenDepth);
+
+    // depth enabled
+    D3D11_DEPTH_STENCIL_DESC depthStencilDesc;
+    ZeroMemory(&depthStencilDesc, sizeof(depthStencilDesc));
+    depthStencilDesc.DepthEnable = true;
+    depthStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+    depthStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
+    depthStencilDesc.StencilEnable = true;
+    depthStencilDesc.StencilReadMask = 0xFF;
+    depthStencilDesc.StencilWriteMask = 0xFF;
+    depthStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
+    depthStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+    depthStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
+    depthStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
+    depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
+
+    // Create the depth stencil state.
+    hr = m_pd3dDevice->CreateDepthStencilState(&depthStencilDesc, &m_depthStencilState);
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    // depth disabled
+    depthStencilDesc.DepthEnable = false;
+    hr = m_pd3dDevice->CreateDepthStencilState(&depthStencilDesc, &m_depthDisabledStencilState);
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -197,6 +233,18 @@ void D3DCore::shutdown()
     m_pSwapChain->SetFullscreenState(FALSE, NULL);
 
     if (m_pImmediateContext) m_pImmediateContext->ClearState();
+
+    if (m_depthDisabledStencilState)
+    {
+        m_depthDisabledStencilState->Release();
+        m_depthDisabledStencilState = nullptr;
+    }
+
+    if (m_depthStencilState)
+    {
+        m_depthStencilState->Release();
+        m_depthStencilState = nullptr;
+    }
 
     if (m_pDepthStencil) m_pDepthStencil->Release();
     if (m_pDepthStencilView) m_pDepthStencilView->Release();
@@ -221,15 +269,9 @@ bool D3DCore::resize_window(int window_width, int window_height)
     m_pDepthStencil = nullptr;
 
     // Detect if newly created full-screen swap chain isn't actually full screen.
-    IDXGIOutput* pTarget;
     BOOL bFullscreen;
-    if (SUCCEEDED(m_pSwapChain->GetFullscreenState(&bFullscreen, &pTarget)))
+    if (SUCCEEDED(m_pSwapChain->GetFullscreenState(&bFullscreen, nullptr)))
     {
-        // A pointer to the output target(see IDXGIOutput) when the mode is full screen; otherwise NULL.
-        if (pTarget)
-        {
-            pTarget->Release();
-        }
         LOG << "Fullscreen = " << (bFullscreen ? "true" : "false") << "\n";
     }
     else
@@ -310,6 +352,9 @@ bool D3DCore::resize_window(int window_width, int window_height)
     // Create the projection matrix for 3D rendering.
     m_projectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
 
+    // Create an orthographic projection matrix for 2D rendering.
+    m_orthoMatrix = XMMatrixOrthographicLH((float)window_width, (float)window_height, screenNear, screenDepth);
+
     return true;
 }
 
@@ -339,5 +384,22 @@ ID3D11DeviceContext* D3DCore::get_device_context()
 void D3DCore::get_projection_matrix(XMMATRIX& mat)
 {
     mat = m_projectionMatrix;
+}
+
+void D3DCore::get_ortho_matrix(XMMATRIX& mat)
+{
+    mat = m_orthoMatrix;
+}
+
+void D3DCore::turn_on_z_buffer()
+{
+    m_pImmediateContext->OMSetDepthStencilState(m_depthStencilState, 1);
+    return;
+}
+
+void D3DCore::turn_off_z_buffer()
+{
+    m_pImmediateContext->OMSetDepthStencilState(m_depthDisabledStencilState, 1);
+    return;
 }
 

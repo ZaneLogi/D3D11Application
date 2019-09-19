@@ -33,29 +33,33 @@ public:
     ID3D11DeviceContext* get_device_context();
 
     void get_projection_matrix(XMMATRIX& mat);
+    void get_ortho_matrix(XMMATRIX& mat);
+
+    void turn_on_z_buffer();
+    void turn_off_z_buffer();
 
 private:
-    D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
-    D3D_FEATURE_LEVEL       m_featureLevel = D3D_FEATURE_LEVEL_11_0;
+    D3D_DRIVER_TYPE             m_driverType = D3D_DRIVER_TYPE_NULL;
+    D3D_FEATURE_LEVEL           m_featureLevel = D3D_FEATURE_LEVEL_11_0;
 
-    ID3D11Device*           m_pd3dDevice = nullptr;
-    ID3D11Device1*          m_pd3dDevice1 = nullptr;
-    ID3D11DeviceContext*    m_pImmediateContext = nullptr;
-    ID3D11DeviceContext1*   m_pImmediateContext1 = nullptr;
-    IDXGISwapChain*         m_pSwapChain = nullptr;
-    IDXGISwapChain1*        m_pSwapChain1 = nullptr;
-    ID3D11RenderTargetView* m_pRenderTargetView = nullptr;
-    ID3D11Texture2D*        m_pDepthStencil = nullptr;
-    ID3D11DepthStencilView* m_pDepthStencilView = nullptr;
+    ID3D11Device*               m_pd3dDevice = nullptr;
+    ID3D11Device1*              m_pd3dDevice1 = nullptr;
+    ID3D11DeviceContext*        m_pImmediateContext = nullptr;
+    ID3D11DeviceContext1*       m_pImmediateContext1 = nullptr;
+    IDXGISwapChain*             m_pSwapChain = nullptr;
+    IDXGISwapChain1*            m_pSwapChain1 = nullptr;
+    ID3D11RenderTargetView*     m_pRenderTargetView = nullptr;
+    ID3D11Texture2D*            m_pDepthStencil = nullptr;
+    ID3D11DepthStencilView*     m_pDepthStencilView = nullptr;
 
-    bool                    m_vsync_enabled;
-    int                     m_videoCardMemory;
-    char                    m_videoCardDescription[128];
+    bool                        m_vsync_enabled;
+    int                         m_videoCardMemory;
+    char                        m_videoCardDescription[128];
 
-    ID3D11Texture2D*        m_depthStencilBuffer;
-    ID3D11DepthStencilState* m_depthStencilState;
-    ID3D11DepthStencilView* m_depthStencilView;
-    ID3D11RasterizerState*  m_rasterState;
+    ID3D11RasterizerState*      m_rasterState = nullptr;
+    ID3D11DepthStencilState*    m_depthStencilState = nullptr;
+    ID3D11DepthStencilState*    m_depthDisabledStencilState = nullptr;
 
-    XMMATRIX                m_projectionMatrix;
+    XMMATRIX                    m_projectionMatrix;
+    XMMATRIX                    m_orthoMatrix;
 };

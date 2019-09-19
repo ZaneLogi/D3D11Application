@@ -106,7 +106,8 @@ copy texture.ps $(OutputPath) /Y
 copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
-copy light.vs $(OutputPath) /Y</Command>
+copy light.vs $(OutputPath) /Y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -128,7 +129,8 @@ copy texture.ps $(OutputPath) /Y
 copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
-copy light.vs $(OutputPath) /Y</Command>
+copy light.vs $(OutputPath) /Y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -154,7 +156,8 @@ copy texture.ps $(OutputPath) /Y
 copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
-copy light.vs $(OutputPath) /Y</Command>
+copy light.vs $(OutputPath) /Y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -180,11 +183,13 @@ copy texture.ps $(OutputPath) /Y
 copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
-copy light.vs $(OutputPath) /Y</Command>
+copy light.vs $(OutputPath) /Y
+</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BitmapModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorShader.cpp" />
     <ClCompile Include="D3DCore.cpp" />
@@ -203,6 +208,7 @@ copy light.vs $(OutputPath) /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BitmapModel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorShader.h" />
     <ClInclude Include="D3DCore.h" />
