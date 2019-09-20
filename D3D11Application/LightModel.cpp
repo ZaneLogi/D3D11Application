@@ -1,5 +1,45 @@
 #include "LightModel.h"
 
+LightModel::VertexType LightModel::s_box_vertices[] =
+{
+    {{-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
+    {{ 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
+    {{ 1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{-1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{ 1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{ 1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{-1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{-1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
+    {{-1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
+    {{-1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
+    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
+    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
+    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
+    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
+    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
+    {{ 1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
+};
+
 bool LightModel::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
 {
     // Initialize the vertex and index buffers.
@@ -38,7 +78,13 @@ void LightModel::update()
         timeStart = timeCur;
     t = (timeCur - timeStart) / 1000.0f;
 
-    m_worldMatrix = XMMatrixTranslation(cosf(t) * 3, sinf(t) * 3, 0.0f);
+    auto pos_matrix = XMMatrixTranslation(cosf(t) * 3, sinf(t) * 3, 0.0f);
+
+    // Rotate the world matrix by the rotation value so that the triangle will spin.
+    static float rotation = 0.0f;
+    rotation += 0.01f;
+    auto rot_matrix = XMMatrixRotationRollPitchYaw(rotation, rotation, 0);
+    m_worldMatrix = rot_matrix * pos_matrix;
 }
 
 void LightModel::render(ID3D11DeviceContext* deviceContext)
@@ -64,24 +110,16 @@ ID3D11ShaderResourceView* LightModel::get_texture()
 
 bool LightModel::initialize_buffers(ID3D11Device* device)
 {
-    VertexType* vertices;
     unsigned long* indices;
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
 
     // Set the number of vertices in the vertex array.
-    m_vertexCount = 3;
+    m_vertexCount = _countof(s_box_vertices);
 
     // Set the number of indices in the index array.
-    m_indexCount = 3;
-
-    // Create the vertex array.
-    vertices = new VertexType[m_vertexCount];
-    if (!vertices)
-    {
-        return false;
-    }
+    m_indexCount = _countof(s_box_vertices);
 
     // Create the index array.
     indices = new unsigned long[m_indexCount];
@@ -90,25 +128,12 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
         return false;
     }
 
-    // Load the vertex array with data.
-    vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
-    vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
-    vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+    for (int i = 0; i < m_indexCount; i++)
+    {
+        indices[i] = i;
+    }
 
-    vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-    vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
-    vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-    vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-    vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-    vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-    // Load the index array with data.
-    indices[0] = 0;  // Bottom left.
-    indices[1] = 1;  // Top middle.
-    indices[2] = 2;  // Bottom right.
-
-                     // Set up the description of the static vertex buffer.
+    // Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
     vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -117,7 +142,7 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
     vertexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = vertices;
+    vertexData.pSysMem = s_box_vertices;
     vertexData.SysMemPitch = 0;
     vertexData.SysMemSlicePitch = 0;
 
@@ -149,11 +174,8 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
     }
 
     // Release the arrays now that the vertex and index buffers have been created and loaded.
-    delete[] vertices;
-    vertices = 0;
-
     delete[] indices;
-    indices = 0;
+    indices = nullptr;
 
     return true;
 }

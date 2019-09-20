@@ -27,6 +27,8 @@ private:
         XMFLOAT3 normal;
     };
 
+    static VertexType s_box_vertices[];
+
 public:
     LightModel() = default;
     LightModel(const LightModel&) = delete;

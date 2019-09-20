@@ -112,7 +112,7 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
     }
 
     // Initialize the light object.
-    m_light->set_diffuse_color(1.0f, 0.0f, 1.0f, 1.0f);
+    m_light->set_diffuse_color(1.0f, 1.0f, 1.0f, 1.0f);
     m_light->set_direction(0.0f, 0.0f, 1.0f);
 
     // Create the bitmap object.
