@@ -4,6 +4,8 @@
 #include <list>
 #include <iostream>
 #include <sstream>
+#include <fstream>
+
 
 class Logger
 {
@@ -41,3 +43,27 @@ private:
 };
 
 #define LOG Logger::instance()
+
+
+
+class FileLogger : public Logger::Listener
+{
+public:
+    virtual void onLog(const std::string& text) override;
+
+    FileLogger(const char* log_file_name);
+    FileLogger(const FileLogger&) = delete;
+    ~FileLogger();
+
+private:
+    std::ofstream m_file;
+};
+
+class OdsLogger : public Logger::Listener
+{
+public:
+    virtual void onLog(const std::string& text) override;
+
+    OdsLogger();
+    ~OdsLogger();
+};

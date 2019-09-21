@@ -1,44 +1,153 @@
 #include "LightModel.h"
 
-LightModel::VertexType LightModel::s_box_vertices[] =
+void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::vector<unsigned long>& indices)
 {
-    {{-1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, { 0.0f,  0.0f, -1.0f}},
-    {{ 1.0f,  1.0f, -1.0f}, {0.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f, -1.0f, -1.0f}, {0.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 1.0f,  0.0f,  0.0f}},
-    {{ 1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{-1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{ 1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{ 1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{-1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{-1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 0.0f,  0.0f,  1.0f}},
-    {{-1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f,  1.0f, -1.0f}, {1.0f, 0.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {1.0f, 1.0f}, {-1.0f,  0.0f,  0.0f}},
-    {{-1.0f,  1.0f,  1.0f}, {0.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{-1.0f,  1.0f, -1.0f}, {0.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{ 1.0f,  1.0f,  1.0f}, {1.0f, 0.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{ 1.0f,  1.0f, -1.0f}, {1.0f, 1.0f}, { 0.0f,  1.0f,  0.0f}},
-    {{-1.0f, -1.0f, -1.0f}, {0.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
-    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
-    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
-    {{-1.0f, -1.0f,  1.0f}, {0.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
-    {{ 1.0f, -1.0f, -1.0f}, {1.0f, 0.0f}, { 0.0f, -1.0f,  0.0f}},
-    {{ 1.0f, -1.0f,  1.0f}, {1.0f, 1.0f}, { 0.0f, -1.0f,  0.0f}},
-};
+    const float size = 0.5f;
+
+    vertices.clear();
+    indices.clear();
+
+    // left-hand coordinates
+    unsigned long vertex_index = 0;
+
+    // front face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { -size,  size, -size }, { 0.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ {  size,  size, -size }, { 1.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ { -size, -size, -size },{ 0.0f, 1.0f },{ 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ { size, -size, -size },{ 1.0f, 1.0f },{ 0.0f,  0.0f, -1.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 3);
+    // right face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { size,  size, -size}, {0.0f, 0.0f}, { 1.0f,  0.0f,  0.0f} });
+    vertices.push_back({ { size, size, size}, { 1.0f, 0.0f }, { 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { size, -size, -size },{ 0.0f, 1.0f },{ 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { size, -size,  size },{ 1.0f, 1.0f },{ 1.0f,  0.0f,  0.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 3);
+    // back face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { size, size, size}, { 0.0f, 0.0f }, { 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ { -size,  size,  size },{ 1.0f, 0.0f },{ 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ { size, -size,  size },{ 0.0f, 1.0f },{ 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ { -size, -size,  size },{ 1.0f, 1.0f },{ 0.0f,  0.0f,  1.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 3);
+    // left face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { -size,  size,  size },{ 0.0f, 0.0f },{ -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -size,  size, -size },{ 1.0f, 0.0f },{ -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -size, -size,  size },{ 0.0f, 1.0f },{ -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -size, -size, -size },{ 1.0f, 1.0f },{ -1.0f,  0.0f,  0.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 3);
+    // top face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { -size,  size,  size },{ 0.0f, 0.0f },{ 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ {  size,  size,  size },{ 1.0f, 0.0f },{ 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ { -size,  size, -size },{ 0.0f, 1.0f },{ 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ {  size,  size, -size },{ 1.0f, 1.0f },{ 0.0f,  1.0f,  0.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 2);
+    indices.push_back(vertex_index + 1);
+    indices.push_back(vertex_index + 3);
+    // bottom face
+    vertex_index = (unsigned long)vertices.size();
+    vertices.push_back({ { -size, -size, -size },{ 0.0f, 0.0f },{ 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ {  size, -size, -size },{ 1.0f, 0.0f },{ 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ { -size, -size,  size },{ 0.0f, 1.0f },{ 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ {  size, -size,  size },{ 1.0f, 1.0f },{ 0.0f, -1.0f,  0.0f } });
+    indices.push_back(vertex_index);
+    indices.push_back(vertex_index+1);
+    indices.push_back(vertex_index+2);
+    indices.push_back(vertex_index+2);
+    indices.push_back(vertex_index+1);
+    indices.push_back(vertex_index+3);
+}
+
+void LightModel::create_sphere(int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices)
+{
+    vertices.clear();
+    indices.clear();
+
+    float phiStep = XM_PI / stackCount;
+    float thetaStep = 2.0f * XM_PI / sliceCount;
+
+    vertices.push_back({ { 0, 1, 0 },{ 0, 0 },{ 0, 1, 0 } });
+
+    for (int i = 1; i <= stackCount - 1; i++)
+    {
+        float phi = i * phiStep;
+        for (int j = 0; j <= sliceCount; j++)
+        {
+            float theta = j * thetaStep;
+            XMFLOAT3 pos(
+                sinf(phi) * cosf(theta),
+                cosf(phi),
+                sinf(phi) * sinf(theta));
+
+            XMFLOAT2 uv(theta / (XM_PI * 2), phi / XM_PI);
+
+            XMFLOAT3 norm(pos);
+
+            vertices.push_back({ pos, uv, norm });
+        }
+    }
+
+    vertices.push_back({ { 0, -1, 0 },{ 0, 1 },{ 0, -1, 0 } });
+
+    for (int i = 1; i <= sliceCount; i++)
+    {
+        indices.push_back(0);
+        indices.push_back(i + 1);
+        indices.push_back(i);
+    }
+
+    unsigned long baseIndex = 1;
+    unsigned long ringVertexCount = sliceCount + 1;
+    for (int i = 0; i < stackCount - 2; i++)
+    {
+        for (int j = 0; j < sliceCount; j++)
+        {
+            indices.push_back(baseIndex + i*ringVertexCount + j);
+            indices.push_back(baseIndex + i*ringVertexCount + j + 1);
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
+
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
+            indices.push_back(baseIndex + i*ringVertexCount + j + 1);
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j + 1);
+        }
+    }
+
+    unsigned long southPoleIndex = (unsigned long)vertices.size() - 1;
+    baseIndex = southPoleIndex - ringVertexCount;
+    for (int i = 0; i < sliceCount; i++)
+    {
+        indices.push_back(southPoleIndex);
+        indices.push_back(baseIndex + i);
+        indices.push_back(baseIndex + i + 1);
+    }
+
+}
 
 bool LightModel::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
 {
@@ -83,8 +192,9 @@ void LightModel::update()
     // Rotate the world matrix by the rotation value so that the triangle will spin.
     static float rotation = 0.0f;
     rotation += 0.01f;
-    auto rot_matrix = XMMatrixRotationRollPitchYaw(rotation, rotation, 0);
-    m_worldMatrix = rot_matrix * pos_matrix;
+    auto rot_matrix = XMMatrixRotationRollPitchYaw(0, rotation, 0);
+    auto scale_mat = XMMatrixScaling(1.5f, 1.5f, 1.5f);
+    m_worldMatrix = rot_matrix * scale_mat * pos_matrix;
 }
 
 void LightModel::render(ID3D11DeviceContext* deviceContext)
@@ -93,7 +203,7 @@ void LightModel::render(ID3D11DeviceContext* deviceContext)
     render_buffers(deviceContext);
 }
 
-int LightModel::get_index_count()
+unsigned long LightModel::get_index_count()
 {
     return m_indexCount;
 }
@@ -110,28 +220,20 @@ ID3D11ShaderResourceView* LightModel::get_texture()
 
 bool LightModel::initialize_buffers(ID3D11Device* device)
 {
-    unsigned long* indices;
     D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
     HRESULT result;
 
+    std::vector<VertexType> vertices;
+    std::vector<unsigned long> indices;
+    //create_box(vertices, indices);
+    create_sphere(20, 20, vertices, indices);
+
     // Set the number of vertices in the vertex array.
-    m_vertexCount = _countof(s_box_vertices);
+    m_vertexCount = (unsigned long)vertices.size();
 
     // Set the number of indices in the index array.
-    m_indexCount = _countof(s_box_vertices);
-
-    // Create the index array.
-    indices = new unsigned long[m_indexCount];
-    if (!indices)
-    {
-        return false;
-    }
-
-    for (int i = 0; i < m_indexCount; i++)
-    {
-        indices[i] = i;
-    }
+    m_indexCount = (unsigned long)indices.size();
 
     // Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
@@ -142,7 +244,7 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
     vertexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = s_box_vertices;
+    vertexData.pSysMem = vertices.data();
     vertexData.SysMemPitch = 0;
     vertexData.SysMemSlicePitch = 0;
 
@@ -162,7 +264,7 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
     indexBufferDesc.StructureByteStride = 0;
 
     // Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
+    indexData.pSysMem = indices.data();
     indexData.SysMemPitch = 0;
     indexData.SysMemSlicePitch = 0;
 
@@ -172,10 +274,6 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
     {
         return false;
     }
-
-    // Release the arrays now that the vertex and index buffers have been created and loaded.
-    delete[] indices;
-    indices = nullptr;
 
     return true;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vector>
+
 #include <d3d11.h>
 #include <directxmath.h>
 using namespace DirectX;
@@ -28,6 +30,9 @@ private:
     };
 
     static VertexType s_box_vertices[];
+    void create_box(std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
+    void create_sphere(int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
+
 
 public:
     LightModel() = default;
@@ -38,7 +43,7 @@ public:
     void update();
     void render(ID3D11DeviceContext*);
 
-    int get_index_count();
+    unsigned long get_index_count();
     void get_world_matrix(XMMATRIX& mat);
     ID3D11ShaderResourceView* get_texture();
 
@@ -53,8 +58,8 @@ private:
 private:
     ID3D11Buffer*   m_vertexBuffer = nullptr;
     ID3D11Buffer*   m_indexBuffer = nullptr;
-    int             m_vertexCount = 0;
-    int             m_indexCount = 0;
+    unsigned long   m_vertexCount = 0;
+    unsigned long   m_indexCount = 0;
     XMMATRIX        m_worldMatrix;
 
     Texture*        m_texture = nullptr;
