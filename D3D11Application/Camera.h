@@ -17,20 +17,34 @@ public:
     }
 
 public:
-    Camera() = default;
+    Camera();
     Camera(const Camera&) = delete;
 
-    void set_position(float, float, float);
-    void set_rotation(float, float, float);
+    void set_view_parameters(const XMFLOAT3& eyePos, const XMFLOAT3& lookAt, const XMFLOAT3& upVec);
+    XMFLOAT3 get_position() const { return m_position; }
+    XMFLOAT3 get_up_vector() const { return m_up; }
+    XMFLOAT3 get_view_direction() const { return m_look; }
+    XMFLOAT3 get_cross_vector() const { return m_right; }
 
-    XMFLOAT3 get_position();
-    XMFLOAT3 get_rotation();
+    XMMATRIX get_view_matrix() const { return XMLoadFloat4x4(&m_view_matrix); }
+    XMMATRIX get_billboard_matrix() const;
+
+    void set_position(const XMFLOAT3& pos);
+    void rotate(float pitch, float yaw, float roll);
+    void move(float forward, float strafe, float up);
+
+    void fix_yaw_axis(const XMFLOAT3& axis);
 
     void render();
-    void get_view_matrix(XMMATRIX&);
 
 private:
-    float m_positionX = 0, m_positionY = 0, m_positionZ = 0;
-    float m_rotationX = 0, m_rotationY = 0, m_rotationZ = 0;
-    XMMATRIX m_viewMatrix;
+    XMFLOAT3 m_position;
+    XMFLOAT3 m_look;
+    XMFLOAT3 m_up;
+    XMFLOAT3 m_right;
+
+    XMFLOAT4X4 m_view_matrix;
+
+    bool        m_is_fixed_yaw_axis;
+    XMVECTOR    m_fixed_yaw_axis;
 };

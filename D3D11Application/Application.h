@@ -2,6 +2,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+#include <windowsx.h>
 
 #include "Input.h"
 #include "Graphics.h"
@@ -47,6 +48,8 @@ private:
     Input*      m_input = nullptr;
     Graphics*   m_graphics = nullptr;
     Timer*      m_timer = nullptr;
+
+    bool        m_quit = false;
 
     double m_FRAME_INTERVAL = 1.0 / 100; // seconds
     int    m_MAX_FRAME_SKIPS ; // max allowable frame skips

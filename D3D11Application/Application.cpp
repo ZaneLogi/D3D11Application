@@ -25,7 +25,7 @@ bool Application::initialize(HINSTANCE hInstance, int nCmdShow, int screen_width
 
     m_input = new Input;
     if (!m_input ||
-        !m_input->initialize())
+        !m_input->initialize(m_hwnd))
     {
         return false;
     }
@@ -73,7 +73,10 @@ int Application::run()
         else
         {
             if (!update() || !render())
+            {
+                m_quit = true;
                 break;
+            }
 
             afterTime = m_timer->getTime();
             timeDiff = afterTime - beforeTime;
@@ -150,12 +153,31 @@ LRESULT Application::on_message(HWND hWnd, UINT message, WPARAM wParam, LPARAM l
     case WM_KEYUP:
         m_input->key_up((int)wParam);
         return 0;
+    case WM_MOUSEMOVE:
+        m_input->handle_mousemove();
+        return 0;
+    case WM_LBUTTONDOWN:
+        m_input->handle_lbutton_down(hWnd);
+        return 0;
+    case WM_LBUTTONUP:
+        m_input->handle_lbutton_up();
+        return 0;
+    case WM_RBUTTONDOWN:
+        m_input->handle_rbutton_down(hWnd);
+        return 0;
+    case WM_RBUTTONUP:
+        m_input->handle_rbutton_up();
+        return 0;
+    case WM_INPUT:
+        m_input->handle_input((HRAWINPUT)lParam);
+        return 0;
     case WM_SIZE:
     {
         WORD width = LOWORD(lParam);
         WORD height = HIWORD(lParam);
         LOG << "width = " << width << ", height = " << height << "\n";
-        if (width != 0 && height != 0 && m_graphics)
+        // if the application is going to quit, do nothing
+        if (!m_quit && width != 0 && height != 0 && m_graphics)
         {
             m_graphics->resize_window(width, height);
         }
@@ -213,6 +235,9 @@ bool Application::update()
     }
 
     // Do the frame processing for the graphics object.
+    int mouse_x, mouse_y;
+    m_input->get_mouse_move(&mouse_x, &mouse_y);
+    m_graphics->update_camera(mouse_x, mouse_y);
     if (!m_graphics->update())
     {
         return false;

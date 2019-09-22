@@ -1,4 +1,5 @@
 #include "Graphics.h"
+#include "Logger.h"
 
 bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
 {
@@ -17,8 +18,8 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
     }
 
     // Set the initial position of the camera.
-    m_camera->set_position(0.0f, 0.0f, -10.0f);
-    m_camera->set_rotation(0.0f, 0.0f, 0.0f);
+    m_camera->set_view_parameters(XMFLOAT3(0.0f, 0.0f, -10.0f), XMFLOAT3(0, 0, 1), XMFLOAT3(0, 1, 0));
+    m_camera->fix_yaw_axis(XMFLOAT3(0, 1, 0));
 
     // Create the model object.
     m_model = new Model;
@@ -218,6 +219,14 @@ void Graphics::resize_window(int window_width, int window_height)
     m_bitmap_model->set_screen_size(window_width, window_height);
 }
 
+bool Graphics::update_camera(int x, int y)
+{
+    float rx = x * XM_PI / 1800;
+    float ry = y * XM_PI / 1800;
+    m_camera->rotate(ry, rx, 0);
+    return true;
+}
+
 bool Graphics::update()
 {
     /*
@@ -262,7 +271,7 @@ bool Graphics::render()
     m_camera->render();
 
     // Get the view, and projection matrices from the camera and d3d objects.
-    m_camera->get_view_matrix(viewMatrix);
+    viewMatrix = m_camera->get_view_matrix();
     m_d3dcore->get_projection_matrix(projectionMatrix);
     m_d3dcore->get_ortho_matrix(orthoMatrix);
 

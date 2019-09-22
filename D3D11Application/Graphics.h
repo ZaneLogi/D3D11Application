@@ -23,6 +23,7 @@ public:
     bool initialize(HWND hwnd, int screen_width, int screen_height);
     void shutdown();
     void resize_window(int window_width, int window_height);
+    bool update_camera(int x, int y);
     bool update();
     bool render();
 
