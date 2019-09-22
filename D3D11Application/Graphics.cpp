@@ -130,11 +130,53 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
         return false;
     }
 
+    //
+    m_rectangle_model = new RectangleModel;
+    if (!m_rectangle_model)
+    {
+        return false;
+    }
+    else if (!m_rectangle_model->initialize(m_d3dcore->get_device(), m_d3dcore->get_device_context(), screen_width, screen_height))
+    {
+        MessageBox(hwnd, L"Could not initialize the rectangle object.", L"Error", MB_OK);
+        return false;
+    }
+
+    //
+    m_rectangle_shader = new RectangleShader;
+    if (!m_rectangle_shader)
+    {
+        return false;
+    }
+
+    // Initialize the light shader object.
+    if (!m_rectangle_shader->initialize(m_d3dcore->get_device(), hwnd))
+    {
+        MessageBox(hwnd, L"Could not initialize the rectangle shader object.", L"Error", MB_OK);
+        return false;
+    }
+
     return true;
 }
 
 void Graphics::shutdown()
 {
+    //
+    if (m_rectangle_shader)
+    {
+        m_rectangle_shader->shutdown();
+        delete m_rectangle_shader;
+        m_rectangle_shader = nullptr;
+    }
+
+    //
+    if (!m_rectangle_model)
+    {
+        m_rectangle_model->shutdown();
+        delete m_rectangle_model;
+        m_rectangle_model = nullptr;
+    }
+
     // Release the bitmap object.
     if (m_bitmap_model)
     {
@@ -217,6 +259,7 @@ void Graphics::resize_window(int window_width, int window_height)
 {
     m_d3dcore->resize_window(window_width, window_height);
     m_bitmap_model->set_screen_size(window_width, window_height);
+    m_rectangle_model->set_screen_size(window_width, window_height);
 }
 
 bool Graphics::update_camera(int x, int y)
@@ -312,7 +355,7 @@ bool Graphics::render()
     }
 #endif
 
-#if 1
+#if 0
     // Turn off the Z buffer to begin all 2D rendering.
     m_d3dcore->turn_off_z_buffer();
 
@@ -332,6 +375,33 @@ bool Graphics::render()
         m_bitmap_model->get_index_count(),
         worldMatrix, viewMatrix, orthoMatrix,
         m_bitmap_model->get_texture()))
+    {
+        return false;
+    }
+
+    // Turn the Z buffer back on now that all 2D rendering has completed.
+    m_d3dcore->turn_on_z_buffer();
+#endif
+
+#if 1
+    // Turn off the Z buffer to begin all 2D rendering.
+    m_d3dcore->turn_off_z_buffer();
+
+    m_rectangle_model->get_world_matrix(worldMatrix);
+
+    XMFLOAT3 up(0.0f, 1.0f, 0.0f), position(0.0f, 0.0f, -100.0f), lookAt(0.0f, 0.0f, 0.0f);
+    viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
+
+    // Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
+    if (!m_rectangle_model->render(m_d3dcore->get_device_context(), 0, 0))
+    {
+        return false;
+    }
+
+    // Render the bitmap with the texture shader.
+    if (!m_rectangle_shader->render(m_d3dcore->get_device_context(),
+        m_rectangle_model->get_index_count(),
+        worldMatrix, viewMatrix, orthoMatrix))
     {
         return false;
     }

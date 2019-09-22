@@ -201,6 +201,8 @@ copy light.vs $(OutputPath) /Y
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Model.cpp" />
+    <ClCompile Include="RectangleModel.cpp" />
+    <ClCompile Include="RectangleShader.cpp" />
     <ClCompile Include="StrUtils.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureModel.cpp" />
@@ -220,6 +222,8 @@ copy light.vs $(OutputPath) /Y
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="Logger.h" />
     <ClInclude Include="Model.h" />
+    <ClInclude Include="RectangleModel.h" />
+    <ClInclude Include="RectangleShader.h" />
     <ClInclude Include="StrUtils.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureModel.h" />

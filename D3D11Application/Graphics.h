@@ -13,6 +13,8 @@
 #include "LightShader.h"
 #include "Light.h"
 #include "BitmapModel.h"
+#include "RectangleModel.h"
+#include "RectangleShader.h"
 
 class Graphics
 {
@@ -38,6 +40,8 @@ private:
     LightShader*    m_light_shader = nullptr;
     Light*          m_light = nullptr;
     BitmapModel*    m_bitmap_model = nullptr;
+    RectangleModel* m_rectangle_model = nullptr;
+    RectangleShader* m_rectangle_shader = nullptr;
 
     float           m_camera_speed = -0.1f;
     float           m_camera_rotation = 0.5f;

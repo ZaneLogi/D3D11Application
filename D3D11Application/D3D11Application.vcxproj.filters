@@ -69,6 +69,12 @@
     <ClCompile Include="StrUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="RectangleModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RectangleShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h">
@@ -120,6 +126,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StrUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleModel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RectangleShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
