@@ -30,9 +30,9 @@ private:
     };
 
     static VertexType s_box_vertices[];
-    void create_box(std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
-    void create_sphere(int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
-
+    void create_box(float width, float height, float depth, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
+    void create_sphere(float radius, int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
+    void create_cylinder(float top_radius, float bottom_radius, float height, int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices);
 
 public:
     LightModel() = default;

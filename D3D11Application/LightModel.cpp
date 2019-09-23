@@ -1,8 +1,10 @@
 #include "LightModel.h"
 
-void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::vector<unsigned long>& indices)
+void LightModel::create_box(float width, float height, float depth, std::vector<LightModel::VertexType>& vertices, std::vector<unsigned long>& indices)
 {
-    const float size = 0.5f;
+    const auto w2 = width * 0.5f;
+    const auto h2 = height * 0.5f;
+    const auto d2 = depth * 0.5f;
 
     vertices.clear();
     indices.clear();
@@ -12,10 +14,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
 
     // front face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { -size,  size, -size }, { 0.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
-    vertices.push_back({ {  size,  size, -size }, { 1.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
-    vertices.push_back({ { -size, -size, -size },{ 0.0f, 1.0f },{ 0.0f,  0.0f, -1.0f } });
-    vertices.push_back({ { size, -size, -size },{ 1.0f, 1.0f },{ 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ { -w2,  h2, -d2 }, { 0.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ {  w2,  h2, -d2 }, { 1.0f, 0.0f }, { 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ { -w2, -h2, -d2 }, { 0.0f, 1.0f }, { 0.0f,  0.0f, -1.0f } });
+    vertices.push_back({ {  w2, -h2, -d2 }, { 1.0f, 1.0f }, { 0.0f,  0.0f, -1.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index + 1);
     indices.push_back(vertex_index + 2);
@@ -24,10 +26,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index + 3);
     // right face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { size,  size, -size}, {0.0f, 0.0f}, { 1.0f,  0.0f,  0.0f} });
-    vertices.push_back({ { size, size, size}, { 1.0f, 0.0f }, { 1.0f,  0.0f,  0.0f } });
-    vertices.push_back({ { size, -size, -size },{ 0.0f, 1.0f },{ 1.0f,  0.0f,  0.0f } });
-    vertices.push_back({ { size, -size,  size },{ 1.0f, 1.0f },{ 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { w2,  h2, -d2 }, { 0.0f, 0.0f }, { 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { w2,  h2,  d2 }, { 1.0f, 0.0f }, { 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { w2, -h2, -d2 }, { 0.0f, 1.0f }, { 1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { w2, -h2,  d2 }, { 1.0f, 1.0f }, { 1.0f,  0.0f,  0.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index + 1);
     indices.push_back(vertex_index + 2);
@@ -36,10 +38,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index + 3);
     // back face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { size, size, size}, { 0.0f, 0.0f }, { 0.0f,  0.0f,  1.0f } });
-    vertices.push_back({ { -size,  size,  size },{ 1.0f, 0.0f },{ 0.0f,  0.0f,  1.0f } });
-    vertices.push_back({ { size, -size,  size },{ 0.0f, 1.0f },{ 0.0f,  0.0f,  1.0f } });
-    vertices.push_back({ { -size, -size,  size },{ 1.0f, 1.0f },{ 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ {  w2,  h2,  d2 }, { 0.0f, 0.0f }, { 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ { -w2,  h2,  d2 }, { 1.0f, 0.0f }, { 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ {  w2, -h2,  d2 }, { 0.0f, 1.0f }, { 0.0f,  0.0f,  1.0f } });
+    vertices.push_back({ { -w2, -h2,  d2 }, { 1.0f, 1.0f }, { 0.0f,  0.0f,  1.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index + 1);
     indices.push_back(vertex_index + 2);
@@ -48,10 +50,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index + 3);
     // left face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { -size,  size,  size },{ 0.0f, 0.0f },{ -1.0f,  0.0f,  0.0f } });
-    vertices.push_back({ { -size,  size, -size },{ 1.0f, 0.0f },{ -1.0f,  0.0f,  0.0f } });
-    vertices.push_back({ { -size, -size,  size },{ 0.0f, 1.0f },{ -1.0f,  0.0f,  0.0f } });
-    vertices.push_back({ { -size, -size, -size },{ 1.0f, 1.0f },{ -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -w2,  h2,  d2 }, { 0.0f, 0.0f }, { -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -w2,  h2, -d2 }, { 1.0f, 0.0f }, { -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -w2, -h2,  d2 }, { 0.0f, 1.0f }, { -1.0f,  0.0f,  0.0f } });
+    vertices.push_back({ { -w2, -h2, -d2 }, { 1.0f, 1.0f }, { -1.0f,  0.0f,  0.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index + 1);
     indices.push_back(vertex_index + 2);
@@ -60,10 +62,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index + 3);
     // top face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { -size,  size,  size },{ 0.0f, 0.0f },{ 0.0f,  1.0f,  0.0f } });
-    vertices.push_back({ {  size,  size,  size },{ 1.0f, 0.0f },{ 0.0f,  1.0f,  0.0f } });
-    vertices.push_back({ { -size,  size, -size },{ 0.0f, 1.0f },{ 0.0f,  1.0f,  0.0f } });
-    vertices.push_back({ {  size,  size, -size },{ 1.0f, 1.0f },{ 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ { -w2, h2,  d2 }, { 0.0f, 0.0f }, { 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ { w2,  h2,  d2 }, { 1.0f, 0.0f }, { 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ { -w2, h2, -d2 }, { 0.0f, 1.0f }, { 0.0f,  1.0f,  0.0f } });
+    vertices.push_back({ { w2,  h2, -d2 }, { 1.0f, 1.0f }, { 0.0f,  1.0f,  0.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index + 1);
     indices.push_back(vertex_index + 2);
@@ -72,10 +74,10 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index + 3);
     // bottom face
     vertex_index = (unsigned long)vertices.size();
-    vertices.push_back({ { -size, -size, -size },{ 0.0f, 0.0f },{ 0.0f, -1.0f,  0.0f } });
-    vertices.push_back({ {  size, -size, -size },{ 1.0f, 0.0f },{ 0.0f, -1.0f,  0.0f } });
-    vertices.push_back({ { -size, -size,  size },{ 0.0f, 1.0f },{ 0.0f, -1.0f,  0.0f } });
-    vertices.push_back({ {  size, -size,  size },{ 1.0f, 1.0f },{ 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ { -w2, -h2, -d2 }, { 0.0f, 0.0f }, { 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ {  w2, -h2, -d2 }, { 1.0f, 0.0f }, { 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ { -w2, -h2,  d2 }, { 0.0f, 1.0f }, { 0.0f, -1.0f,  0.0f } });
+    vertices.push_back({ {  w2, -h2,  d2 }, { 1.0f, 1.0f }, { 0.0f, -1.0f,  0.0f } });
     indices.push_back(vertex_index);
     indices.push_back(vertex_index+1);
     indices.push_back(vertex_index+2);
@@ -84,13 +86,13 @@ void LightModel::create_box(std::vector<LightModel::VertexType>& vertices, std::
     indices.push_back(vertex_index+3);
 }
 
-void LightModel::create_sphere(int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices)
+void LightModel::create_sphere(float radius, int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices)
 {
     vertices.clear();
     indices.clear();
 
     float phiStep = XM_PI / stackCount;
-    float thetaStep = 2.0f * XM_PI / sliceCount;
+    float thetaStep = XM_2PI / sliceCount;
 
     vertices.push_back({ { 0, 1, 0 },{ 0, 0 },{ 0, 1, 0 } });
 
@@ -101,9 +103,9 @@ void LightModel::create_sphere(int sliceCount, int stackCount, std::vector<Verte
         {
             float theta = j * thetaStep;
             XMFLOAT3 pos(
-                sinf(phi) * cosf(theta),
-                cosf(phi),
-                sinf(phi) * sinf(theta));
+                radius * sinf(phi) * cosf(theta),
+                radius * cosf(phi),
+                radius * sinf(phi) * sinf(theta));
 
             XMFLOAT2 uv(theta / (XM_PI * 2), phi / XM_PI);
 
@@ -146,7 +148,110 @@ void LightModel::create_sphere(int sliceCount, int stackCount, std::vector<Verte
         indices.push_back(baseIndex + i);
         indices.push_back(baseIndex + i + 1);
     }
+}
 
+void LightModel::create_cylinder(float top_radius, float bottom_radius, float height, int sliceCount, int stackCount, std::vector<VertexType>& vertices, std::vector<unsigned long>& indices)
+{
+    vertices.clear();
+    indices.clear();
+
+    int baseIndex = 0;
+    float x, y, z, u, v, r;
+    float dTheta;
+
+    // top
+    y = 0.5f * height;
+    dTheta = XM_2PI / sliceCount;
+
+    for (int i = 0; i <= sliceCount; i++)
+    {
+        x = top_radius * cosf(i*dTheta);
+        z = top_radius * sinf(i*dTheta);
+
+        u = x / height + 0.5f;
+        v = z / height + 0.5f;
+
+        vertices.push_back({ {x,y,z}, {u,v}, {0,1,0} });
+    }
+
+    vertices.push_back({ { 0,y,0 }, { 0.5f,0.5f }, { 0, 1, 0 } });
+    int centerIndex = (int)vertices.size() - 1;
+    for (int i = 0; i < sliceCount; i++)
+    {
+        indices.push_back(centerIndex);
+        indices.push_back(baseIndex + i + 1);
+        indices.push_back(baseIndex + i);
+    }
+
+    // body
+    baseIndex = (int)vertices.size();
+
+    float stackHeight = height / stackCount;
+    float radiusStep = (top_radius - bottom_radius) / stackCount;
+    int ringCount = stackCount + 1;
+
+    for (int i = 0; i < ringCount; i++)
+    {
+        y = -0.5f*height + i*stackHeight;
+        r = bottom_radius + i*radiusStep;
+        dTheta = XM_2PI / sliceCount;
+        for (int j = 0; j <= sliceCount; j++)
+        {
+            float c = cosf(j*dTheta);
+            float s = sinf(j*dTheta);
+
+            float dr = bottom_radius - top_radius;
+
+            auto t = XMFLOAT3(-s, 0.0f, c);
+            auto bitangent = XMFLOAT3(dr*c, -height, dr*s);
+
+            auto n = XMVector3Cross(XMLoadFloat3(&t), XMLoadFloat3(&bitangent));
+            n = XMVector3Normalize(n);
+            XMFLOAT3 norm;
+            XMStoreFloat3(&norm, n);
+
+            vertices.push_back({ {r*c, y, r*s}, { (float)j / sliceCount, 1.0f - (float)i / stackCount }, norm });
+        }
+    }
+
+    int ringVertexCount = sliceCount + 1;
+    for (int i = 0; i < stackCount; i++)
+    {
+        for (int j = 0; j < sliceCount; j++)
+        {
+            indices.push_back(baseIndex + i*ringVertexCount + j);
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j);
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j + 1);
+
+            indices.push_back(baseIndex + i*ringVertexCount + j);
+            indices.push_back(baseIndex + (i + 1)*ringVertexCount + j + 1);
+            indices.push_back(baseIndex + i*ringVertexCount + j + 1);
+        }
+    }
+
+    // bottom
+    baseIndex = (int)vertices.size();
+
+    y = -0.5f * height;
+    dTheta = XM_2PI / sliceCount;
+
+    for (int i = 0; i <= sliceCount; i++)
+    {
+        x = bottom_radius * cosf(i * dTheta);
+        z = bottom_radius * sinf(i * dTheta);
+
+        u = x / height + 0.5f;
+        v = z / height + 0.5f;
+        vertices.push_back({ { x,y,z },{ u,v },{ 0,-1,0 } });
+    }
+    vertices.push_back({ { 0,y,0 },{ 0.5f,0.5f },{ 0, -1, 0 } });
+    centerIndex = (int)vertices.size() - 1;
+    for (int i = 0; i < sliceCount; i++)
+    {
+        indices.push_back(centerIndex);
+        indices.push_back(baseIndex + i);
+        indices.push_back(baseIndex + i + 1);
+    }
 }
 
 bool LightModel::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* textureFilename)
@@ -226,8 +331,9 @@ bool LightModel::initialize_buffers(ID3D11Device* device)
 
     std::vector<VertexType> vertices;
     std::vector<unsigned long> indices;
-    //create_box(vertices, indices);
-    create_sphere(20, 20, vertices, indices);
+    //create_box(1, 2, 3, vertices, indices);
+    //create_sphere(1, 20, 20, vertices, indices);
+    create_cylinder(0.3, 0.5, 1, 10, 10, vertices, indices);
 
     // Set the number of vertices in the vertex array.
     m_vertexCount = (unsigned long)vertices.size();
