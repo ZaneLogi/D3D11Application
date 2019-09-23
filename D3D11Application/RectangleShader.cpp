@@ -2,10 +2,8 @@
 #include <d3dcompiler.h>
 #include <fstream>
 
-extern const char VertexShaderText[];
-extern const char PixelShaderText[];
-extern const int VertexShaderTextLength;
-extern const int PixelShaderTextLength;
+extern const char ShaderText[];
+extern const int ShaderTextLength;
 
 bool RectangleShader::initialize(ID3D11Device* device, HWND hwnd)
 {
@@ -22,12 +20,10 @@ void RectangleShader::shutdown()
 bool RectangleShader::render(
     ID3D11DeviceContext* deviceContext,
     int indexCount,
-    const XMMATRIX& worldMatrix,
-    const XMMATRIX& viewMatrix,
-    const XMMATRIX& projectionMatrix)
+    const XMMATRIX& orthoMatrix)
 {
     // Set the shader parameters that it will use for rendering.
-    if (!set_shader_parameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix))
+    if (!set_shader_parameters(deviceContext, orthoMatrix))
     {
         return false;
     }
@@ -55,7 +51,7 @@ bool RectangleShader::initialize_shader(ID3D11Device* device, HWND hwnd)
     pixelShaderBuffer = 0;
 
     // Compile the vertex shader code.
-    result = D3DCompile(VertexShaderText, VertexShaderTextLength, NULL, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+    result = D3DCompile(ShaderText, ShaderTextLength, NULL, NULL, NULL, "ColorVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
         &vertexShaderBuffer, &errorMessage);
     if (FAILED(result))
     {
@@ -74,7 +70,7 @@ bool RectangleShader::initialize_shader(ID3D11Device* device, HWND hwnd)
     }
 
     // Compile the pixel shader code.
-    result = D3DCompile(PixelShaderText, PixelShaderTextLength, NULL, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
+    result = D3DCompile(ShaderText, ShaderTextLength, NULL, NULL, NULL, "ColorPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0,
         &pixelShaderBuffer, &errorMessage);
     if (FAILED(result))
     {
@@ -223,20 +219,12 @@ void RectangleShader::output_shader_error_message(ID3D10Blob* errorMessage, HWND
     MessageBox(hwnd, L"Error compiling shader.  Check shader-error.txt for message.", shaderFilename, MB_OK);
 }
 
-bool RectangleShader::set_shader_parameters(ID3D11DeviceContext* deviceContext,
-    const XMMATRIX& worldMatrix,
-    const XMMATRIX& viewMatrix,
-    const XMMATRIX& projectionMatrix)
+bool RectangleShader::set_shader_parameters(ID3D11DeviceContext* deviceContext, const XMMATRIX& orthoMatrix)
 {
     HRESULT result;
     D3D11_MAPPED_SUBRESOURCE mappedResource;
     MatrixBufferType* dataPtr;
     unsigned int bufferNumber;
-
-    // Transpose the matrices to prepare them for the shader.
-    auto worldMatrix1 = XMMatrixTranspose(worldMatrix);
-    auto viewMatrix1 = XMMatrixTranspose(viewMatrix);
-    auto projectionMatrix1 = XMMatrixTranspose(projectionMatrix);
 
     // Lock the constant buffer so it can be written to.
     result = deviceContext->Map(m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -249,9 +237,7 @@ bool RectangleShader::set_shader_parameters(ID3D11DeviceContext* deviceContext,
     dataPtr = (MatrixBufferType*)mappedResource.pData;
 
     // Copy the matrices into the constant buffer.
-    dataPtr->world = worldMatrix1;
-    dataPtr->view = viewMatrix1;
-    dataPtr->projection = projectionMatrix1;
+    dataPtr->ortho = XMMatrixTranspose(orthoMatrix);
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_matrixBuffer, 0);
@@ -279,35 +265,33 @@ void RectangleShader::render_shader(ID3D11DeviceContext* deviceContext, int inde
 }
 
 
-const char VertexShaderText[] =
-"\
-cbuffer MatrixBuffer { matrix worldMatrix; matrix viewMatrix; matrix projectionMatrix; };\n\
-struct VertexInputType { float4 position : POSITION; float4 color : COLOR; };\n\
-struct PixelInputType { float4 position : SV_POSITION; float4 color : COLOR; };\n\
-PixelInputType ColorVertexShader(VertexInputType input)\n\
-{\n\
-    PixelInputType output;\n\
-\n\
-    input.position.w = 1.0f;\n\
-\n\
-    output.position = mul(input.position, worldMatrix);\n\
-    output.position = mul(output.position, viewMatrix);\n\
-    output.position = mul(output.position, projectionMatrix);\n\
-\n\
-    output.color = input.color;\n\
-\n\
-    return output;\n\
-}\0";
+const char ShaderText[] = R"(
+cbuffer MatrixBuffer
+{
+    matrix orthoMatrix;
+};
+struct VertexInputType
+{
+    float4 position : POSITION;
+    float4 color : COLOR;
+};
+struct PixelInputType
+{
+    float4 position : SV_POSITION;
+    float4 color : COLOR;
+};
+PixelInputType ColorVertexShader(VertexInputType input)
+{
+    PixelInputType output;
+    input.position.w = 1.0f;
+    output.position = mul(input.position, orthoMatrix);
+    output.color = input.color;
+    return output;
+}
+float4 ColorPixelShader(PixelInputType input) : SV_TARGET
+{
+    return input.color;
+}
+)";;
 
-const int VertexShaderTextLength = sizeof(VertexShaderText);
-
-
-const char PixelShaderText[] =
-"\
-struct PixelInputType { float4 position : SV_POSITION; float4 color : COLOR; };\n\
-float4 ColorPixelShader(PixelInputType input) : SV_TARGET\n\
-{\n\
-    return input.color;\n\
-}\0";
-
-const int PixelShaderTextLength = sizeof(PixelShaderText);
+const int ShaderTextLength = sizeof(ShaderText);

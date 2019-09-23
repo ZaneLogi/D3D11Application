@@ -9,9 +9,7 @@ class RectangleShader
 private:
     struct MatrixBufferType
     {
-        XMMATRIX world;
-        XMMATRIX view;
-        XMMATRIX projection;
+        XMMATRIX ortho;
     };
 
 public:
@@ -20,14 +18,14 @@ public:
 
     bool initialize(ID3D11Device*, HWND);
     void shutdown();
-    bool render(ID3D11DeviceContext*, int, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&);
+    bool render(ID3D11DeviceContext*, int, const XMMATRIX&);
 
 private:
     bool initialize_shader(ID3D11Device*, HWND);
     void shutdown_shader();
     void output_shader_error_message(ID3D10Blob*, HWND, WCHAR*);
 
-    bool set_shader_parameters(ID3D11DeviceContext*, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&);
+    bool set_shader_parameters(ID3D11DeviceContext*, const XMMATRIX&);
     void render_shader(ID3D11DeviceContext*, int);
 
 private:

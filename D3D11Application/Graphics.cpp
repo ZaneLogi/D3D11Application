@@ -383,7 +383,7 @@ bool Graphics::render()
     m_d3dcore->turn_on_z_buffer();
 #endif
 
-#if 1
+#if 0
     // Turn off the Z buffer to begin all 2D rendering.
     m_d3dcore->turn_off_z_buffer();
 
@@ -400,8 +400,7 @@ bool Graphics::render()
 
     // Render the bitmap with the texture shader.
     if (!m_rectangle_shader->render(m_d3dcore->get_device_context(),
-        m_rectangle_model->get_index_count(),
-        worldMatrix, viewMatrix, orthoMatrix))
+        m_rectangle_model->get_index_count(), orthoMatrix))
     {
         return false;
     }
