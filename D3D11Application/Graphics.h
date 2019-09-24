@@ -15,6 +15,7 @@
 #include "BitmapModel.h"
 #include "RectangleModel.h"
 #include "RectangleShader.h"
+#include "Text.h"
 
 class Graphics
 {
@@ -42,6 +43,7 @@ private:
     BitmapModel*    m_bitmap_model = nullptr;
     RectangleModel* m_rectangle_model = nullptr;
     RectangleShader* m_rectangle_shader = nullptr;
+    Text*           m_text = nullptr;
 
     float           m_camera_speed = -0.1f;
     float           m_camera_rotation = 0.5f;

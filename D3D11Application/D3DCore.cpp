@@ -225,6 +225,37 @@ bool D3DCore::initialize(HWND hwnd, int screen_width, int screen_height)
         return false;
     }
 
+    // Clear the blend state description.
+    D3D11_BLEND_DESC blendStateDescription;
+    ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
+
+    // Create an alpha enabled blend state description.
+    blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
+    blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_ONE;
+    blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+    blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+    blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+    blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+    blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+    blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
+
+    // Create the blend state using the description.
+    hr = m_pd3dDevice->CreateBlendState(&blendStateDescription, &m_alphaEnableBlendingState);
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
+    // Modify the description to create an alpha disabled blend state description.
+    blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
+
+    // Create the blend state using the description.
+    hr = m_pd3dDevice->CreateBlendState(&blendStateDescription, &m_alphaDisableBlendingState);
+    if (FAILED(hr))
+    {
+        return false;
+    }
+
     return true;
 }
 
@@ -233,6 +264,18 @@ void D3DCore::shutdown()
     m_pSwapChain->SetFullscreenState(FALSE, NULL);
 
     if (m_pImmediateContext) m_pImmediateContext->ClearState();
+
+    if (m_alphaEnableBlendingState)
+    {
+        m_alphaEnableBlendingState->Release();
+        m_alphaEnableBlendingState = nullptr;
+    }
+
+    if (m_alphaDisableBlendingState)
+    {
+        m_alphaDisableBlendingState->Release();
+        m_alphaDisableBlendingState = nullptr;
+    }
 
     if (m_depthDisabledStencilState)
     {
@@ -403,3 +446,32 @@ void D3DCore::turn_off_z_buffer()
     return;
 }
 
+void D3DCore::turn_on_alpha_blending()
+{
+    float blendFactor[4];
+
+
+    // Setup the blend factor.
+    blendFactor[0] = 0.0f;
+    blendFactor[1] = 0.0f;
+    blendFactor[2] = 0.0f;
+    blendFactor[3] = 0.0f;
+
+    // Turn on the alpha blending.
+    m_pImmediateContext->OMSetBlendState(m_alphaEnableBlendingState, blendFactor, 0xffffffff);
+}
+
+void D3DCore::turn_off_alpha_blending()
+{
+    float blendFactor[4];
+
+
+    // Setup the blend factor.
+    blendFactor[0] = 0.0f;
+    blendFactor[1] = 0.0f;
+    blendFactor[2] = 0.0f;
+    blendFactor[3] = 0.0f;
+
+    // Turn off the alpha blending.
+    m_pImmediateContext->OMSetBlendState(m_alphaDisableBlendingState, blendFactor, 0xffffffff);
+}

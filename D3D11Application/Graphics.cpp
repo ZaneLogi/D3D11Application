@@ -156,11 +156,37 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
         return false;
     }
 
+    // Create the text object.
+    m_text = new Text;
+    if (!m_text)
+    {
+        return false;
+    }
+
+    // Initialize the text object.
+    auto baseViewMatrix = XMMatrixLookAtLH(
+        XMLoadFloat3(&XMFLOAT3(0,0,-1)),
+        XMLoadFloat3(&XMFLOAT3(0,0,0)),
+        XMLoadFloat3(&XMFLOAT3(0,1,0)));
+    if (!m_text->initialize(m_d3dcore->get_device(), m_d3dcore->get_device_context(), hwnd, screen_width, screen_height, baseViewMatrix))
+    {
+        MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
+        return false;
+    }
+
     return true;
 }
 
 void Graphics::shutdown()
 {
+    // Release the text object.
+    if (m_text)
+    {
+        m_text->shutdown();
+        delete m_text;
+        m_text = 0;
+    }
+
     //
     if (m_rectangle_shader)
     {
@@ -383,7 +409,7 @@ bool Graphics::render()
     m_d3dcore->turn_on_z_buffer();
 #endif
 
-#if 0
+#if 1
     // Turn off the Z buffer to begin all 2D rendering.
     m_d3dcore->turn_off_z_buffer();
 
@@ -406,6 +432,22 @@ bool Graphics::render()
     }
 
     // Turn the Z buffer back on now that all 2D rendering has completed.
+    m_d3dcore->turn_on_z_buffer();
+#endif
+
+#if 1
+    m_d3dcore->turn_off_z_buffer();
+    m_d3dcore->turn_on_alpha_blending();
+
+    worldMatrix = XMMatrixIdentity();
+
+    // Render the text strings.
+    if (!m_text->render(m_d3dcore->get_device_context(), worldMatrix, orthoMatrix))
+    {
+        return false;
+    }
+
+    m_d3dcore->turn_off_alpha_blending();
     m_d3dcore->turn_on_z_buffer();
 #endif
 

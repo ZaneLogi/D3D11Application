@@ -38,6 +38,9 @@ public:
     void turn_on_z_buffer();
     void turn_off_z_buffer();
 
+    void turn_on_alpha_blending();
+    void turn_off_alpha_blending();
+
 private:
     D3D_DRIVER_TYPE             m_driverType = D3D_DRIVER_TYPE_NULL;
     D3D_FEATURE_LEVEL           m_featureLevel = D3D_FEATURE_LEVEL_11_0;
@@ -59,6 +62,8 @@ private:
     ID3D11RasterizerState*      m_rasterState = nullptr;
     ID3D11DepthStencilState*    m_depthStencilState = nullptr;
     ID3D11DepthStencilState*    m_depthDisabledStencilState = nullptr;
+    ID3D11BlendState*           m_alphaEnableBlendingState = nullptr;
+    ID3D11BlendState*           m_alphaDisableBlendingState = nullptr;
 
     XMMATRIX                    m_projectionMatrix;
     XMMATRIX                    m_orthoMatrix;

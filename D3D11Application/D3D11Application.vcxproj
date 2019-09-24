@@ -107,6 +107,10 @@ copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
 copy light.vs $(OutputPath) /Y
+copy fontdata.txt $(OutputPath) /Y
+copy font.dds $(OutputPath) /Y
+copy font.ps $(OutputPath) /Y
+copy font.vs $(OutputPath) /Y
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -130,6 +134,10 @@ copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
 copy light.vs $(OutputPath) /Y
+copy fontdata.txt $(OutputPath) /Y
+copy font.dds $(OutputPath) /Y
+copy font.ps $(OutputPath) /Y
+copy font.vs $(OutputPath) /Y
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -157,6 +165,10 @@ copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
 copy light.vs $(OutputPath) /Y
+copy fontdata.txt $(OutputPath) /Y
+copy font.dds $(OutputPath) /Y
+copy font.ps $(OutputPath) /Y
+copy font.vs $(OutputPath) /Y
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
@@ -184,15 +196,22 @@ copy texture.vs $(OutputPath) /Y
 copy stone01.tga $(OutputPath) /Y
 copy light.ps $(OutputPath) /Y
 copy light.vs $(OutputPath) /Y
+copy fontdata.txt $(OutputPath) /Y
+copy font.dds $(OutputPath) /Y
+copy font.ps $(OutputPath) /Y
+copy font.vs $(OutputPath) /Y
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
+    <ClCompile Include="BitmapFont.cpp" />
+    <ClCompile Include="BitmapFontShader.cpp" />
     <ClCompile Include="BitmapModel.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="ColorShader.cpp" />
     <ClCompile Include="D3DCore.cpp" />
+    <ClCompile Include="DDSTextureLoader.cpp" />
     <ClCompile Include="Graphics.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
@@ -204,6 +223,7 @@ copy light.vs $(OutputPath) /Y
     <ClCompile Include="RectangleModel.cpp" />
     <ClCompile Include="RectangleShader.cpp" />
     <ClCompile Include="StrUtils.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TextureModel.cpp" />
     <ClCompile Include="TextureShader.cpp" />
@@ -211,10 +231,13 @@ copy light.vs $(OutputPath) /Y
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Application.h" />
+    <ClInclude Include="BitmapFont.h" />
+    <ClInclude Include="BitmapFontShader.h" />
     <ClInclude Include="BitmapModel.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="ColorShader.h" />
     <ClInclude Include="D3DCore.h" />
+    <ClInclude Include="DDSTextureLoader.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
@@ -225,6 +248,7 @@ copy light.vs $(OutputPath) /Y
     <ClInclude Include="RectangleModel.h" />
     <ClInclude Include="RectangleShader.h" />
     <ClInclude Include="StrUtils.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TextureModel.h" />
     <ClInclude Include="TextureShader.h" />
@@ -257,13 +281,19 @@ copy light.vs $(OutputPath) /Y
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </None>
+    <None Include="font.ps" />
+    <None Include="font.vs" />
     <None Include="light.ps" />
     <None Include="light.vs" />
     <None Include="texture.ps" />
     <None Include="texture.vs" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="font.dds" />
     <Image Include="stone01.tga" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="fontdata.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
