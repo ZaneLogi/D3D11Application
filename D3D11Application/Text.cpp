@@ -20,7 +20,7 @@ bool Text::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, 
     }
 
     // Initialize the font object.
-    result = m_Font->initialize(device, "fontdata.txt", "font.dds");
+    result = m_Font->initialize(device, deviceContext, "fontdata.txt", "font.dds");
     if (!result)
     {
         MessageBox(hwnd, L"Could not initialize the font object.", L"Error", MB_OK);
@@ -265,7 +265,7 @@ bool Text::UpdateSentence(SentenceType* sentence, char* text, int positionX, int
     drawY = (float)((m_screenHeight / 2) - positionY);
 
     // Use the font class to build the vertex array from the sentence text and sentence draw location.
-    m_Font->build_vertex_array((void*)vertices, text, drawX, drawY);
+    m_Font->build_vertex_array2((void*)vertices, text, drawX, drawY);
 
     // Lock the vertex buffer so it can be written to.
     result = deviceContext->Map(sentence->vertexBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
@@ -340,7 +340,7 @@ bool Text::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sent
     pixelColor = XMFLOAT4(sentence->red, sentence->green, sentence->blue, 1.0f);
 
     // Render the text using the font shader.
-    result = m_FontShader->render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture(),
+    result = m_FontShader->render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture2(),
         pixelColor);
     if (!result)
     {
