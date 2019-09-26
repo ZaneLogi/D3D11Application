@@ -33,9 +33,6 @@ bool BitmapModel::initialize(
         return false;
     }
 
-    // Initialize the world matrix to the identity matrix.
-    m_worldMatrix = XMMatrixIdentity();
-
     return true;
 }
 
@@ -73,11 +70,6 @@ bool BitmapModel::render(ID3D11DeviceContext* deviceContext, int positionX, int 
 int BitmapModel::get_index_count()
 {
     return m_indexCount;
-}
-
-void BitmapModel::get_world_matrix(XMMATRIX& mat)
-{
-    mat = m_worldMatrix;
 }
 
 ID3D11ShaderResourceView* BitmapModel::get_texture()

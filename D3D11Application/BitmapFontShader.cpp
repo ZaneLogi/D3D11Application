@@ -25,15 +25,13 @@ void BitmapFontShader::shutdown()
 }
 
 bool BitmapFontShader::render(ID3D11DeviceContext* deviceContext, int indexCount,
-    const XMMATRIX& worldMatrix,
-    const XMMATRIX& viewMatrix,
     const XMMATRIX& projectionMatrix,
     ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor)
 {
     bool result;
 
     // Set the shader parameters that it will use for rendering.
-    result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, pixelColor);
+    result = SetShaderParameters(deviceContext, projectionMatrix, texture, pixelColor);
     if (!result)
     {
         return false;
@@ -289,8 +287,6 @@ void BitmapFontShader::OutputShaderErrorMessage(ID3D10Blob* errorMessage, HWND h
 }
 
 bool BitmapFontShader::SetShaderParameters(ID3D11DeviceContext* deviceContext,
-    const XMMATRIX& worldMatrix,
-    const XMMATRIX& viewMatrix,
     const XMMATRIX& projectionMatrix,
     ID3D11ShaderResourceView* texture, XMFLOAT4 pixelColor)
 {
@@ -311,15 +307,8 @@ bool BitmapFontShader::SetShaderParameters(ID3D11DeviceContext* deviceContext,
     // Get a pointer to the data in the constant buffer.
     dataPtr = (ConstantBufferType*)mappedResource.pData;
 
-    // Transpose the matrices to prepare them for the shader.
-    auto worldMatrix1 = XMMatrixTranspose(worldMatrix);
-    auto viewMatrix1 = XMMatrixTranspose(viewMatrix);
-    auto projectionMatrix1 = XMMatrixTranspose(projectionMatrix);
-
     // Copy the matrices into the constant buffer.
-    dataPtr->world = worldMatrix1;
-    dataPtr->view = viewMatrix1;
-    dataPtr->projection = projectionMatrix1;
+    dataPtr->projection = XMMatrixTranspose(projectionMatrix);
 
     // Unlock the constant buffer.
     deviceContext->Unmap(m_constantBuffer, 0);

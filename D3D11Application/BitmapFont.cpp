@@ -69,7 +69,7 @@ void BitmapFont::shutdown()
     // Release the font data.
     ReleaseFontData();
 
-    //ReleaseFontTexture();
+    ReleaseFontTexture();
 }
 
 bool BitmapFont::CreateFontTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
@@ -393,29 +393,35 @@ void BitmapFont::build_vertex_array2(void* vertices, char* sentence, float drawX
         float u1 = (bmp_x + char_w) / m_dib_width;
         float v1 = (bmp_y + m_char_height) / m_dib_height;
 
+        // the world matrix is the identity matrix
+        // the view matrix is the identity matrix, this means that the camera is position at (0,0,0), looks at (0,0,1), up vector is (0,1,0)
+        // the project matrix is the orthogonal matrix, near plan = 1.0f, far plan = 1000.0f
+        // set Z = 10.0f to make the triangle visible by the camera
+        const float Z = 10.0f;
+
         // First triangle in quad.
-        vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);  // Top left.
+        vertexPtr[index].position = XMFLOAT3(drawX, drawY, Z);  // Top left.
         vertexPtr[index].texture = XMFLOAT2(u0, v0);
         index++;
 
-        vertexPtr[index].position = XMFLOAT3((drawX + char_w), (drawY - m_char_height), 0.0f);  // Bottom right.
+        vertexPtr[index].position = XMFLOAT3((drawX + char_w), (drawY - m_char_height), Z);  // Bottom right.
         vertexPtr[index].texture = XMFLOAT2(u1, v1);
         index++;
 
-        vertexPtr[index].position = XMFLOAT3(drawX, (drawY - m_char_height), 0.0f);  // Bottom left.
+        vertexPtr[index].position = XMFLOAT3(drawX, (drawY - m_char_height), Z);  // Bottom left.
         vertexPtr[index].texture = XMFLOAT2(u0, v1);
         index++;
 
         // Second triangle in quad.
-        vertexPtr[index].position = XMFLOAT3(drawX, drawY, 0.0f);  // Top left.
+        vertexPtr[index].position = XMFLOAT3(drawX, drawY, Z);  // Top left.
         vertexPtr[index].texture = XMFLOAT2(u0, v0);
         index++;
 
-        vertexPtr[index].position = XMFLOAT3(drawX + char_w, drawY, 0.0f);  // Top right.
+        vertexPtr[index].position = XMFLOAT3(drawX + char_w, drawY, Z);  // Top right.
         vertexPtr[index].texture = XMFLOAT2(u1, v0);
         index++;
 
-        vertexPtr[index].position = XMFLOAT3((drawX + char_w), (drawY - m_char_height), 0.0f);  // Bottom right.
+        vertexPtr[index].position = XMFLOAT3((drawX + char_w), (drawY - m_char_height), Z);  // Bottom right.
         vertexPtr[index].texture = XMFLOAT2(u1, v1);
         index++;
 

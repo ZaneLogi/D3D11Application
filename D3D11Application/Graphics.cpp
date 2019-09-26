@@ -164,11 +164,7 @@ bool Graphics::initialize(HWND hwnd, int screen_width, int screen_height)
     }
 
     // Initialize the text object.
-    auto baseViewMatrix = XMMatrixLookAtLH(
-        XMLoadFloat3(&XMFLOAT3(0,0,-1)),
-        XMLoadFloat3(&XMFLOAT3(0,0,0)),
-        XMLoadFloat3(&XMFLOAT3(0,1,0)));
-    if (!m_text->initialize(m_d3dcore->get_device(), m_d3dcore->get_device_context(), hwnd, screen_width, screen_height, baseViewMatrix))
+    if (!m_text->initialize(m_d3dcore->get_device(), m_d3dcore->get_device_context(), hwnd, screen_width, screen_height))
     {
         MessageBox(hwnd, L"Could not initialize the text object.", L"Error", MB_OK);
         return false;
@@ -381,17 +377,19 @@ bool Graphics::render()
     }
 #endif
 
-#if 0
+#if 1
     // Turn off the Z buffer to begin all 2D rendering.
     m_d3dcore->turn_off_z_buffer();
 
-    m_bitmap_model->get_world_matrix(worldMatrix);
+    worldMatrix = XMMatrixIdentity();
 
-    XMFLOAT3 up(0.0f, 1.0f, 0.0f), position(0.0f, 0.0f, -100.0f), lookAt(0.0f, 0.0f, 0.0f);
-    viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
+    {
+        XMFLOAT3 up(0.0f, 1.0f, 0.0f), position(0.0f, 0.0f, -100.0f), lookAt(0.0f, 0.0f, 0.0f);
+        viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
+    }
 
     // Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
-    if (!m_bitmap_model->render(m_d3dcore->get_device_context(), 0, 0))
+    if (!m_bitmap_model->render(m_d3dcore->get_device_context(), 400, 0))
     {
         return false;
     }
@@ -415,8 +413,10 @@ bool Graphics::render()
 
     m_rectangle_model->get_world_matrix(worldMatrix);
 
-    XMFLOAT3 up(0.0f, 1.0f, 0.0f), position(0.0f, 0.0f, -100.0f), lookAt(0.0f, 0.0f, 0.0f);
-    viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
+    {
+        XMFLOAT3 up(0.0f, 1.0f, 0.0f), position(0.0f, 0.0f, -100.0f), lookAt(0.0f, 0.0f, 0.0f);
+        viewMatrix = XMMatrixLookAtLH(XMLoadFloat3(&position), XMLoadFloat3(&lookAt), XMLoadFloat3(&up));
+    }
 
     // Put the bitmap vertex and index buffers on the graphics pipeline to prepare them for drawing.
     if (!m_rectangle_model->render(m_d3dcore->get_device_context(), 0, 0))
@@ -439,10 +439,8 @@ bool Graphics::render()
     m_d3dcore->turn_off_z_buffer();
     m_d3dcore->turn_on_alpha_blending();
 
-    worldMatrix = XMMatrixIdentity();
-
     // Render the text strings.
-    if (!m_text->render(m_d3dcore->get_device_context(), worldMatrix, orthoMatrix))
+    if (!m_text->render(m_d3dcore->get_device_context(), orthoMatrix))
     {
         return false;
     }

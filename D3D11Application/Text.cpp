@@ -1,16 +1,12 @@
 #include "Text.h"
 
-bool Text::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight,
-    const XMMATRIX& baseViewMatrix)
+bool Text::initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, HWND hwnd, int screenWidth, int screenHeight)
 {
     bool result;
 
     // Store the screen width and height.
     m_screenWidth = screenWidth;
     m_screenHeight = screenHeight;
-
-    // Store the base view matrix.
-    m_baseViewMatrix = baseViewMatrix;
 
     // Create the font object.
     m_Font = new BitmapFont;
@@ -100,20 +96,20 @@ void Text::shutdown()
     return;
 }
 
-bool Text::render(ID3D11DeviceContext* deviceContext, const XMMATRIX& worldMatrix, const XMMATRIX& orthoMatrix)
+bool Text::render(ID3D11DeviceContext* deviceContext, const XMMATRIX& orthoMatrix)
 {
     bool result;
 
 
     // Draw the first sentence.
-    result = RenderSentence(deviceContext, m_sentence1, worldMatrix, orthoMatrix);
+    result = RenderSentence(deviceContext, m_sentence1, orthoMatrix);
     if (!result)
     {
         return false;
     }
 
     // Draw the second sentence.
-    result = RenderSentence(deviceContext, m_sentence2, worldMatrix, orthoMatrix);
+    result = RenderSentence(deviceContext, m_sentence2, orthoMatrix);
     if (!result)
     {
         return false;
@@ -315,7 +311,6 @@ void Text::ReleaseSentence(SentenceType** sentence)
 }
 
 bool Text::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sentence,
-    const XMMATRIX& worldMatrix,
     const XMMATRIX& orthoMatrix)
 {
     unsigned int stride, offset;
@@ -340,7 +335,7 @@ bool Text::RenderSentence(ID3D11DeviceContext* deviceContext, SentenceType* sent
     pixelColor = XMFLOAT4(sentence->red, sentence->green, sentence->blue, 1.0f);
 
     // Render the text using the font shader.
-    result = m_FontShader->render(deviceContext, sentence->indexCount, worldMatrix, m_baseViewMatrix, orthoMatrix, m_Font->GetTexture2(),
+    result = m_FontShader->render(deviceContext, sentence->indexCount, orthoMatrix, m_Font->GetTexture2(),
         pixelColor);
     if (!result)
     {

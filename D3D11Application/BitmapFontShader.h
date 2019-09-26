@@ -9,8 +9,6 @@ class BitmapFontShader
 private:
     struct ConstantBufferType
     {
-        XMMATRIX world;
-        XMMATRIX view;
         XMMATRIX projection;
     };
 
@@ -25,14 +23,14 @@ public:
 
     bool initialize(ID3D11Device*, HWND);
     void shutdown();
-    bool render(ID3D11DeviceContext*, int, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT4);
+    bool render(ID3D11DeviceContext*, int, const XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT4);
 
 private:
     bool InitializeShader(ID3D11Device*, HWND, WCHAR*, WCHAR*);
     void ShutdownShader();
     void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 
-    bool SetShaderParameters(ID3D11DeviceContext*, const XMMATRIX&, const XMMATRIX&, const XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT4);
+    bool SetShaderParameters(ID3D11DeviceContext*, const XMMATRIX&, ID3D11ShaderResourceView*, XMFLOAT4);
     void RenderShader(ID3D11DeviceContext*, int);
 
 private:

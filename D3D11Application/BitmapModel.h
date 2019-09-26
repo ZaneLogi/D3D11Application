@@ -6,19 +6,8 @@ using namespace DirectX;
 
 #include "Texture.h"
 
-__declspec(align(16)) class BitmapModel
+class BitmapModel
 {
-public:
-    void* operator new(size_t i)
-    {
-        return _mm_malloc(i, 16);
-    }
-
-    void operator delete(void* p)
-    {
-        _mm_free(p);
-    }
-
 private:
     struct VertexType
     {
@@ -36,7 +25,6 @@ public:
     bool render(ID3D11DeviceContext*, int, int);
 
     int get_index_count();
-    void get_world_matrix(XMMATRIX& mat);
     ID3D11ShaderResourceView* get_texture();
 
 private:
@@ -53,7 +41,6 @@ private:
     ID3D11Buffer*   m_indexBuffer = nullptr;
     int             m_vertexCount = 0;
     int             m_indexCount = 0;
-    XMMATRIX        m_worldMatrix;
 
     Texture*        m_texture = nullptr;
 
